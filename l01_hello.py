@@ -1,0 +1,5 @@
+print("안녕!")
+print("Hello!")
+print("こんにちは!")
+print("Hola!")
+print("Bonjour!")
