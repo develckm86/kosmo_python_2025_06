@@ -1,217 +1,93 @@
-# 파이썬 함수(Function) 수업 정리
+# 파이썬 함수(Function) 정리
 
-## 1. 함수란 무엇인가
-- 함수는 **자주 사용하는 코드를 하나의 이름으로 묶은 것**
-- 코드 재사용성 증가
-- 가독성 향상
-- 유지보수 용이
-
+## 1. 기본 정의와 호출
+- `def`로 이름, 매개변수, 본문을 선언하고 `return`으로 결과를 돌려준다. `return`이 없으면 `None`.
 ```python
-def hello():
-    print("Hello Python")
-
-
-⸻
-
-2. 함수 기본 구조
-
-def 함수이름(매개변수):
-    실행문
-    return 반환값
-
-	•	def : 함수 정의 키워드
-	•	매개변수(parameter) : 입력값
-	•	return : 결과 반환 (없으면 None 반환)
-
-⸻
-
-3. 매개변수와 인자
-
-def add(a, b):
+def sum(a, b):
     return a + b
 
-result = add(10, 20)
-print(result)
+print(sum(10, 20))  # 30
+```
+- 같은 이름의 함수를 다시 정의하면 **마지막 정의가 이전 정의를 덮어쓴다**. (예: `sum(a,b)` 뒤에 `sum(a,b,c)`를 만들면 이후엔 3개 인자 버전만 사용 가능)
 
-	•	매개변수: 함수 정의 시 사용하는 변수
-	•	인자: 함수 호출 시 전달하는 값
-
-⸻
-
-4. 반환값(return)
-
-def square(x):
-    return x * x
-
-	•	return을 만나면 함수 즉시 종료
-	•	return이 없으면 None 반환
-
-def test():
-    print("hello")
-
-print(test())  # None
-
-
-⸻
-
-5. 여러 값 반환
-	•	실제로는 튜플 반환
-
-def calc(a, b):
-    return a + b, a - b
-
-x, y = calc(10, 3)
-print(x, y)
-
-
-⸻
-
-6. 기본값 매개변수
-
-def greet(name="Guest"):
-    print(f"Hello {name}")
-
-greet()
-greet("Kim")
-
-	•	호출 시 값을 전달하지 않으면 기본값 사용
-
-⸻
-
-7. 키워드 인자
-
-def info(name, age):
-    print(name, age)
-
-info(age=20, name="Kim")
-
-	•	순서 상관없이 전달 가능
-	•	가독성 향상
-
-⸻
-
-8. 가변 인자
-
-8-1. *args (튜플)
-
-def add_all(*nums):
+## 2. 가변 인자와 언패킹
+- `*args`는 가변 개수의 위치 인자를 **튜플**로 받는다.
+```python
+def sum_all(*args):
+    print(args)          # 전달된 값이 튜플로 모인다
     total = 0
-    for n in nums:
+    for n in args:
         total += n
     return total
 
-print(add_all(1, 2, 3, 4))
+print(sum_all(10, 20, 30))
+nums = [100, 200, 300]
+print(sum_all(*nums))    # 리스트를 *로 풀어 전달
+```
+- `**kwargs`는 키워드 인자를 **딕셔너리**로 받는다.
+```python
+def student_info(**student):
+    print(student)                 # {'name': '경민', 'age': 39}
+    print(f"name={student['name']}")
+    print(f"age={student['age']}")
 
+student_info(name="경민", age=39)
+stu = {"name": "지형", "age": 28}
+student_info(**stu)                # dict도 **로 풀어 전달
+```
+- 키워드 인자 언패킹은 호출부에서도 활용할 수 있다.
+```python
+def student_say(name, age):
+    print(f"{name}의 나이는 {age} 입니다")
 
-⸻
+student_say(**{"name": "지형", "age": 35})
+```
 
-8-2. **kwargs (딕셔너리)
+## 3. 반환값과 튜플 언패킹
+- 여러 값을 반환하면 내부적으로 **튜플**이 만들어진다. 필요하면 한 번에 언패킹.
+```python
+def calc(a, b):
+    return a + b, a - b
 
-def show_info(**info):
-    for k, v in info.items():
-        print(k, v)
+result = calc(10, 20)
+print(result, type(result))  # (30, -10) <class 'tuple'>
+a_plus_b, a_minus_b = calc(5, 2)
+```
 
-show_info(name="Kim", age=20)
-
-
-⸻
-
-9. 매개변수 순서 규칙
-
-일반 매개변수 → 기본값 → *args → **kwargs
-
-def func(a, b=0, *args, **kwargs):
-    pass
-
-
-⸻
-
-10. 지역 변수와 전역 변수
-
-x = 10
-
-def test():
-    x = 20
-    print(x)
-
-test()
-print(x)
-
-	•	함수 내부 변수는 지역 변수
-	•	전역 변수 수정은 권장하지 않음
-
-global x
-
-	•	사용은 가능하지만 지양
-
-⸻
-
-11. 함수 객체 개념
-
-def hello():
-    print("hi")
-
-f = hello
-f()
-
-	•	함수도 객체
-	•	변수에 할당 가능
-	•	다른 함수의 인자로 전달 가능
-
-⸻
-
-12. 람다 함수 (익명 함수)
-
+## 4. 람다와 함수 객체
+- 람다(lambda)는 이름 없는 한 줄 함수 표현식.
+```python
 add = lambda a, b: a + b
-print(add(3, 4))
+print(add(10, 20))
+```
+- 함수는 **객체**이므로 변수에 할당하거나 다른 함수에 넘길 수 있다.
+```python
+def sum(a, b):
+    return a + b
 
-	•	한 줄짜리 간단한 함수
-	•	일회성 로직에 사용
+print(sum)  # <function sum at ...>
+f = sum
+print(f(1, 2))
+```
 
-⸻
+## 5. 지역 변수와 전역 변수
+- 함수 안에서 만든 변수는 함수가 끝나면 사라지는 **지역 변수**, 파일 상단에 둔 변수는 어디서나 읽을 수 있는 **전역 변수**.
+- 함수 안에서 전역 변수를 읽을 때는 그냥 사용 가능하지만, 값을 바꾸려면 `global` 선언이 필요하다. (가능하면 전역 수정은 최소화)
+```python
+x = 10  # 전역 변수
 
-13. 함수와 반복문 결합
+def show_numbers():
+    x = 20  # 지역 변수
+    print("함수 안 x:", x)
 
-def process(n):
-    return n * 2
+show_numbers()
+print("함수 밖 x:", x)  # 전역 x는 그대로
 
-for i in range(5):
-    print(process(i))
+def change_global():
+    global x
+    x = 99  # 전역 값 수정
 
+change_global()
+print("전역 x 수정 후:", x)
+```
 
-⸻
-
-14. 함수 설계 원칙 (수업 포인트)
-	•	함수는 하나의 역할만
-	•	이름은 동사 형태
-	•	입력과 출력이 명확해야 함
-	•	print보다 return 중심 설계
-
-⸻
-
-15. 흔한 실수
-	•	return 대신 print 사용
-	•	함수 안에서 input 처리 남용
-	•	전역 변수 의존
-
-⸻
-
-16. 수업용 핵심 요약
-	•	함수는 코드 재사용 도구
-	•	return은 값 반환
-	•	매개변수 방식이 다양
-	•	함수도 객체
-
-⸻
-
-17. 다음 단계
-	•	함수 심화 (재귀 함수)
-	•	함수 타입 힌트
-	•	고차 함수 (map, filter)
-	•	데코레이터 개념 소개
-
-원하시면 다음도 바로 이어서 준비해드릴 수 있습니다.
-- 함수 **실습 문제 세트**
-- 함수 + 조건문/반복문 종합 문제
-- lambda / map / filter 수업 자료
-- Java 메서드와 비교 설명
