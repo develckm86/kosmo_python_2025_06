@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>자바스크립트 Javascript JS</h1>
+    <p>html 문서(Document)를 조작해서 움직이는 프로그래밍 언어 (front end 언어)</p>
+    <p>node.js 로 사용되는 자바스크립트는 서버언어(php,asp,jsp... 동적페이지)이기도 하다 (back end 언어)</p>
+    <div>
+        <ul id="colorList">
+            <li class="red">01</li>
+            <li class="blue">02</li>
+            <li class="green">03</li>
+            <li class="purple">04</li>
+            <li class="orange">05</li>
+        </ul>
+    </div>
+    <script>
+        //자바스크립트 주석
+        //html을 조작하거나 서버에 http 통신을 할 수도 있다(AJAX). 
+        //window : 브라우저 객체 (창 전체 정보, 현재 url, 브라우저엔진, 창크기...)
+        //window.document : 브라우저에서 출력하고 있는(url로 요청해서 응답받은) html 문서
+        //window.document==document 
+        console.log(document);//==print()
+        //** id는 html 에서 유일하게 지정할 수 있는 속성이기 때문에 이름으로 바로 찾는다.
+        console.log(colorList);
+        colorListNode=document.querySelector("#colorList"); 
+        console.log(colorListNode);
+        //css 선택자로 dom 안의 특정 노드 한개를 찾는다.
+        //soup.select_one() or driver.find_element(By.CSS_SELECTOR,"#colorList")
+        
+        //querySelectorAll => return [li,li,li...] 배열의 노드 개체 반환
+        //soup.select() or driver.find_elements(By.CSS_SELECTOR,"#colorList>li")
+
+        lis=document.querySelectorAll("#colorList>li")
+        console.log(lis);
+        //for li in lis :
+        for (let li of lis){
+            console.log(li);
+            //li.addEventListener("mouseenter",function(e){})
+            //콜백함수 : 개발자가 임의로 실행하는 것이 아니라 특정 이벤트가 발생했을 때 지정해 놓은 함수가 실행되는 것
+            //콜백함수를 재정의 한다.
+            li.onmouseenter=function(e){
+                //self == 객체자신 (this) 
+                color=this.className; //class 속성의 값을 호출 
+                this.style.color=color;
+            }
+            //onmouseenter는 동일한 이벤트를 오직 1개만 지정
+
+            li.addEventListener("mouseleave",function(e){
+                //e : event 와 관련된 정보 (마우의 위치, 마우가 누른 li의 위치, li 자신 ...)
+                e.target.style.color="darkgray"
+            })//addEventListener는  동일한 이벤트를 복수로 지정가능
+            li.addEventListener("mouseleave",function(e){
+                e.target.style.textDecoration="underline"
+            })
+        }
+
+    </script>
+</body>
+</html>
